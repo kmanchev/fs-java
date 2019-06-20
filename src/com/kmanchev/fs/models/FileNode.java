@@ -3,12 +3,12 @@ package com.kmanchev.fs.models;
 public class FileNode extends Node {
 
     private String content;
+    private DirNode parent;
 
     public FileNode(String name) {
         super(name);
         this.content = "";
     }
-
 
     public FileNode(String name, String content) {
         super(name);

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class FileSystemInit {
 
-    public static void main(String args) {
+    public static void main(String args[]) {
 
         FileSystemService fsService = new FileSystemService("root");
         Scanner scanner = new Scanner(System.in);

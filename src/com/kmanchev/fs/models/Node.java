@@ -7,7 +7,10 @@ public abstract class Node {
 
     public Node(String name) {
         this.name = name;
-        this.fullPath = this.fullPath + "/" + name;
+    }
+
+    public void setFullPath(String fullPath) {
+         this.fullPath = fullPath;
     }
 
     public String getFullPath() {
