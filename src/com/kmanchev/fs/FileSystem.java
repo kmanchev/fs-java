@@ -17,18 +17,6 @@ public class FileSystem {
         this.currentDir = this.root;
     }
 
-    public void addFile(String fileName, String content) {
-        FileNode file = new FileNode(fileName, content);
-        file.setFullPath(currentDir.getFullPath() + "/" + fileName);
-        currentDir.setChild(file);
-    }
-
-    public void addDir(String dirName) {
-        DirNode dir = new DirNode(dirName);
-        dir.setFullPath(currentDir.getFullPath() + "/" + dirName);
-        currentDir.setChild(dir);
-    }
-
     public boolean gotToDir(String targetDir) {
         for (DirNode child : currentDir.getDirChildren()) {
             if (child.getName().equals(targetDir)) {
@@ -55,7 +43,35 @@ public class FileSystem {
         return this.currentDir.getFullPath();
     }
 
+    public ArrayList<String> getCurrentDirChildren() {
+        ArrayList<String> childrenInfo = new ArrayList();
 
+        for (Node child : this.currentDir.getChildren()) {
+            childrenInfo.add(child.getName() + "; type: " + child.getType());
+        }
+        return childrenInfo;
+    }
+
+    public ArrayList<String> getCurrentDirChildrenDetailed() {
+        ArrayList<String> childrenInfo = new ArrayList();
+
+        for (Node child : this.currentDir.getChildren()) {
+            childrenInfo.add(child.getName() + "; full Path:" + child.getFullPath() + "; type: " + child.getType());
+        }
+        return childrenInfo;
+    }
+
+    public void addFile(String fileName, String content) {
+        FileNode file = new FileNode(fileName, content);
+        file.setFullPath(currentDir.getFullPath() + "/" + fileName);
+        currentDir.setChild(file);
+    }
+
+    public void addDir(String dirName) {
+        DirNode dir = new DirNode(dirName);
+        dir.setFullPath(currentDir.getFullPath() + "/" + dirName);
+        currentDir.setChild(dir);
+    }
 
     public boolean removeFile(String fileName) {
         for (Node child : currentDir.getChildren()) {
@@ -104,24 +120,6 @@ public class FileSystem {
         }
     }
 
-    public ArrayList<String> getCurrentDirChildren() {
-        ArrayList<String> childrenInfo = new ArrayList();
-
-        for (Node child : this.currentDir.getChildren()) {
-            childrenInfo.add(child.getName() + "; type: " + child.getType());
-        }
-        return childrenInfo;
-    }
-
-    public ArrayList<String> getCurrentDirChildrenDetailed() {
-        ArrayList<String> childrenInfo = new ArrayList();
-
-        for (Node child : this.currentDir.getChildren()) {
-            childrenInfo.add(child.getName() + "; full Path:" + child.getFullPath() + "; type: " + child.getType());
-        }
-        return childrenInfo;
-    }
-
     public boolean isChildDir(String candidate) {
         for (Node child : this.currentDir.getChildren()) {
             if (child.getName().equals(candidate)) {
@@ -139,5 +137,4 @@ public class FileSystem {
         }
         return false;
     }
-
 }
