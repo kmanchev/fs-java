@@ -42,7 +42,7 @@ public class FileSystemService {
                 return performCommand(currentCmd, inputParts);
             }
         }
-        return "invalid command";
+        return "Invalid command";
     }
 
     private String performCommand(Command command, String[] inputParts) {
@@ -76,7 +76,7 @@ public class FileSystemService {
 
     private String performPWD(String[] inputParts) {
         if (inputParts.length > 1) {
-            return "invalid command";
+            return "Invalid command";
         }
 
         return fileSystem.getCurrentDirFullPath();
@@ -97,8 +97,7 @@ public class FileSystemService {
             String toDelete = inputParts[1];
 
             if (fileSystem.isChildFile(toDelete)) {
-                fileSystem.removeFile(toDelete);
-                return "OK";
+                return fileSystem.removeFile(toDelete) ? "OK" : "Invalid command";
             }
 
             if (fileSystem.isChildDir(toDelete)) {
@@ -166,6 +165,8 @@ public class FileSystemService {
             if (inputParts[1].equals("..")) {
                 fileSystem.goToParentDir();
                 return "OK";
+            } else {
+                return fileSystem.gotToDir(inputParts[1]) ? "OK" : "Invalid command";
             }
         }
 

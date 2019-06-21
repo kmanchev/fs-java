@@ -14,22 +14,14 @@ class FileSystemTest {
 
     @Test
     public void testRemoveDirInFileSystem() throws NotAllowedOperationException {
-        DirNode root = new DirNode("root");
-        DirNode child1 = new DirNode("child1");
-        DirNode child11 = new DirNode("child1.1");
-        child1.setChild(child11);
+        FileSystem fs = new FileSystem("root");
+        fs.addDir("child1");
+        fs.addDir("child2");
+        fs.addDir("child3");
 
-        DirNode child2 = new DirNode("child2");
-        DirNode child3 = new DirNode("child3");
-
-        root.setChild(child1);
-        root.setChild(child2);
-        root.setChild(child3);
-
-        FileSystem fs = new FileSystem(root);
         fs.removeDir("child2");
 
-        ArrayList<String> children = fs.getChildren();
+        ArrayList<String> children = fs.getCurrentDirChildren();
         assertTrue(children.size() == 2);
         assertTrue(children.contains("child3; type: directory"));
         assertTrue(children.contains("child1; type: directory"));
@@ -37,46 +29,58 @@ class FileSystemTest {
 
     @Test
     public void testRemoveAllContentInCurrentDir() throws NotAllowedOperationException {
-        DirNode root = new DirNode("root");
-        DirNode child1 = new DirNode("child1");
-        DirNode child11 = new DirNode("child1.1");
-        child1.setChild(child11);
 
-        DirNode child2 = new DirNode("child2");
-        DirNode child3 = new DirNode("child3");
-
-        root.setChild(child1);
-        root.setChild(child2);
-        root.setChild(child3);
-
-        FileSystem fs = new FileSystem(root);
+        FileSystem fs = new FileSystem("root");
+        fs.addDir("child1");
+        fs.addDir("child2");
+        fs.addDir("child3");
+        fs.gotToDir("child1");
+        fs.addDir("child11");
+        fs.addDir("child12");
         fs.removeCurrentDirContent();
 
-        ArrayList<String> children = fs.getChildren();
+        ArrayList<String> children = fs.getCurrentDirChildren();
         assertTrue(children.size() == 0);
     }
 
     @Test
     public void tesCantRemoveDirIfItHasContent() {
-        DirNode root = new DirNode("root");
-        DirNode child1 = new DirNode("child1");
-        DirNode child11 = new DirNode("child1.1");
-        child1.setChild(child11);
-
-        DirNode child2 = new DirNode("child2");
-        DirNode child3 = new DirNode("child3");
-
-        root.setChild(child1);
-        root.setChild(child2);
-        root.setChild(child3);
-
-        FileSystem fs = new FileSystem(root);
+        FileSystem fs = new FileSystem("root");
+        fs.addDir("child1");
+        fs.addDir("child2");
+        fs.addDir("child3");
+        fs.gotToDir("child1");
+        fs.addDir("child11");
+        fs.addDir("child12");
+        fs.goToParentDir();
 
         boolean shouldFail = true;
         try {
             fs.removeDir("child1");
         } catch (NotAllowedOperationException ex) {
             assertTrue(true);
+            shouldFail = false;
+        }
+
+        assertFalse(shouldFail);
+
+    }
+
+    @Test
+    public void tesDirTryToDeleteHerself() {
+        FileSystem fs = new FileSystem("root");
+        fs.addDir("child1");
+        fs.addDir("child2");
+        fs.addDir("child3");
+        fs.gotToDir("child1");
+        fs.addDir("child11");
+        fs.addDir("child12");
+
+        boolean shouldFail = true;
+        try {
+            fs.removeDir("child1");
+        } catch (NotAllowedOperationException ex) {
+            assertEquals("Trying to delete yourself. Could not delete", ex.getMessage());
             shouldFail = false;
         }
 

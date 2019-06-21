@@ -29,14 +29,18 @@ public class FileSystem {
         currentDir.setChild(dir);
     }
 
-    public String gotToDir(String targetDir) {
+    public boolean gotToDir(String targetDir) {
         for (DirNode child : currentDir.getDirChildren()) {
             if (child.getName().equals(targetDir)) {
                 currentDir = child;
-                return "OK";
+                return true;
             }
         }
-        return "Invalid command";
+        return false;
+    }
+
+    public void goToParentDir() {
+        this.currentDir = null == this.currentDir.getParent() ? this.currentDir : this.currentDir.getParent();
     }
 
     public String getRootName() {
@@ -51,17 +55,16 @@ public class FileSystem {
         return this.currentDir.getFullPath();
     }
 
-    public void goToParentDir() {
-        this.currentDir = this.currentDir.getParent();
-    }
 
-    public void removeFile(String fileName) {
+
+    public boolean removeFile(String fileName) {
         for (Node child : currentDir.getChildren()) {
             if (child.getName().equals(fileName)) {
                 currentDir.getChildren().remove(child);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     public void removeDir(String dirName) throws NotAllowedOperationException {
